@@ -2,17 +2,22 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 // Log in the user
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
-  //Check if user exists
   let existingUser = await User.findOne({ email });
+  //Check if user exists and verified
   if (!existingUser) {
     return res
       .status(422)
       .json({ error: "Invalid Email or password" });
+  }
+  if (!existingUser.accountVerified) {
+    return res.status(422).json({ error: "Account not verified" });
   }
 
   //Check for password match
@@ -53,16 +58,41 @@ router.post("/signup", async (req, res) => {
     .hash(password, 10)
     .catch((e) => console.log(e));
 
+  //Creating account token for verification
+  let token = crypto.randomBytes(16).toString("hex");
+  const Gmailer = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
+  let mail = {
+    from: "no-reply@gmail.com",
+    to: email,
+    subject: "Account Verification",
+    html: `<h1>Please verify your account here:</h1><br>
+    <h3><a href="http://${process.env.URL}/verify/${token}" target="_blank">Click here</a> to verify your account.</h3>`,
+  };
+  Gmailer.sendMail(mail, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(422).send({ error: "Failed to send email" });
+    }
+  });
+
   //Creating an user object
   let newUser = {
     name,
     email,
     password: hashedPassword,
+    verificationToken: {
+      token,
+    },
   };
 
   //Saving to MongoDB
-  let created = await new User(newUser).save();
-  console.log(created);
+  await new User(newUser).save();
 
   res.status(200).json({ message: "User registered successfully" });
 });

@@ -13,6 +13,15 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  accountVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    token: { type: String },
+    expiry: { type: Date, default: Date.now() },
+    // + 60 * 60 * 1000
+  },
 });
 
 module.exports = mongoose.model("Users", userSchema);
