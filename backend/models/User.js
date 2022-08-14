@@ -19,8 +19,7 @@ const userSchema = new mongoose.Schema({
   },
   verificationToken: {
     token: { type: String },
-    expiry: { type: Date, default: Date.now() },
-    // + 60 * 60 * 1000
+    expiry: { type: Date, default: Date.now() + 60 * 60 * 1000 }, //After One hour(60 minutes * 60 seconds * 1000ms),
   },
 });
 
