@@ -53,4 +53,29 @@ const verifyController = async (req, res) => {
     .json({ message: "Account Verified Successfully" });
 };
 
-module.exports = verifyController;
+const OTPController = async (req, res) => {
+  const { OTP } = req.body;
+  const isFound = await User.findOne({
+    "passwordReset.otp": OTP,
+  });
+
+  if (!isFound || isFound.passwordReset.otp !== OTP)
+    return res.status(422).json({ error: "Incorrect OTP" });
+  if (Date.parse(isFound.passwordReset.expiry) < Date.now()) {
+    return res.status(422).json({ error: "OTP has expired" });
+  }
+  User.updateOne(
+    {
+      "passwordReset.otp": OTP,
+    },
+    {
+      "passwordReset.otp": null,
+      "passwordReset.expiry": null,
+    }
+  );
+  return res
+    .status(200)
+    .json({ message: "OTP Verified Successfully" });
+};
+
+module.exports = { verifyController, OTPController };

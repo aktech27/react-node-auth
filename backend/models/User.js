@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
     token: { type: String },
     expiry: { type: Date, default: Date.now() + 60 * 60 * 1000 }, //After One hour(60 minutes * 60 seconds * 1000ms),
   },
+  passwordReset: {
+    otp: { type: String, default: null },
+    expiry: { type: Date, default: Date.now() + 10 * 60 * 1000 }, // 10 minutes
+  },
 });
 
 module.exports = mongoose.model("Users", userSchema);
