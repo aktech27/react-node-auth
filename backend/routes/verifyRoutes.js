@@ -8,6 +8,6 @@ const router = require("express").Router();
 router.put("/new/:token", verifyController);
 
 // OTP Verification for forgot password
-router.post("/otp", OTPController);
+router.put("/otp", OTPController);
 
 module.exports = router;

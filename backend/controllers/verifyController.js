@@ -72,7 +72,7 @@ const OTPController = async (req, res) => {
       "passwordReset.otp": null,
       "passwordReset.expiry": null,
     }
-  );
+  ).exec();
   return res
     .status(200)
     .json({ message: "OTP Verified Successfully" });

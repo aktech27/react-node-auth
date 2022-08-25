@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   passwordReset: {
     otp: { type: String, default: null },
-    expiry: { type: Date, default: Date.now() + 10 * 60 * 1000 }, // 10 minutes
+    expiry: { type: Date }, // 10 minutes
   },
 });
 
