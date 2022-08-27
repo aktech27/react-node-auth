@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useFetch from "../../hooks/useFetch";
 const ChangeForm = () => {
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
@@ -10,20 +11,13 @@ const ChangeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const response = await fetch("/api/password/change", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ newPassword, oldPassword }),
-    });
-    const data = await response.json();
-    if (response.ok) {
+    const { ok, data } = useFetch("/api/password/change", "PUT", { newPassword, oldPassword });
+
+    if (ok) {
       setError(null);
       setMessage(data.message);
     }
-    if (!response.ok) {
+    if (!ok) {
       setMessage(null);
       setError(data.error);
     }

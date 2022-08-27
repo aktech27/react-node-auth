@@ -1,6 +1,7 @@
 import "./LoginForm.module.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 const LoginForm = () => {
   const Navigator = useNavigate();
@@ -20,24 +21,17 @@ const LoginForm = () => {
   const handleFormSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    console.log(
-      `Login Form clicked\n\nEmail:${email}\n\nPassword:${password}`
-    );
+    console.log(`Login Form clicked\n\nEmail:${email}\n\nPassword:${password}`);
     //Api call
-    const response = await fetch("/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
-    if (response.ok) {
+
+    const { ok, data } = await useFetch("/api/auth/signin", "POST", { email, password });
+
+    if (ok) {
       setError(null);
       console.log("Success");
       localStorage.setItem("token", data.token);
     }
-    if (!response.ok) {
+    if (!ok) {
       console.log("Error");
       setError(data.error);
     }

@@ -1,6 +1,7 @@
 import "./RegisterForm.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 const LoginForm = () => {
   const Navigator = useNavigate();
@@ -12,23 +13,14 @@ const LoginForm = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(
-      `Register Form clicked\n\nEmail:${email}\n\nPassword:${password}`
-    );
-    const response = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const data = await response.json();
-    if (response.ok) {
+    const { ok, data } = useFetch("/api/auth/signup", "POST", { name, email, password });
+
+    if (ok) {
       setError(null);
       console.log("Success");
       Navigator("/login");
     }
-    if (!response.ok) {
+    if (!ok) {
       console.log("Error");
       setError(data.error);
     }
@@ -57,10 +49,7 @@ const LoginForm = () => {
       </label>
       <label htmlFor="register-password">
         <h4>Password :</h4>
-        <input
-          id="register-password"
-          onChange={handlePasswordChange}
-        />
+        <input id="register-password" onChange={handlePasswordChange} />
       </label>
       <input type="submit" />
       {loading && <div>Loading.....</div>}

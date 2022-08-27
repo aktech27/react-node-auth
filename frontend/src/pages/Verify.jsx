@@ -9,19 +9,14 @@ const Verify = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`/api/verify/new/${token}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const { ok, data } = useFetch(`/api/verify/new/${token}`, "PUT");
+
+      if (ok) {
         setError(null);
         setMessage(data.message);
         console.log("Success");
       }
-      if (!response.ok) {
+      if (!ok) {
         setMessage(null);
         setError(data.error);
         console.log("Error", data);

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useFetch from "../../hooks/useFetch";
 
 const ForgotForm = () => {
   const [email, setEmail] = useState("");
@@ -13,20 +14,12 @@ const ForgotForm = () => {
   const handleFormSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    const response = await fetch("/api/password/update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, newPassword }),
-    });
-    const data = await response.json();
-
-    if (response.ok) {
+    const { ok, data } = await useFetch("/api/password/update", "PUT", { email, newPassword });
+    if (ok) {
       setError(null);
       setMessage(data.message);
     }
-    if (!response.ok) {
+    if (!ok) {
       setMessage(null);
       setError(data.error);
     }
@@ -35,21 +28,13 @@ const ForgotForm = () => {
 
   const handleEmailSubmit = async () => {
     setLoading(true);
-    const response = await fetch("/api/password/reset", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
-    const data = await response.json();
-
-    if (response.ok) {
+    const { ok, data } = await useFetch("/api/password/reset", "POST", { email });
+    if (ok) {
       setError(null);
       setMessage(data.message);
       setStep(2);
     }
-    if (!response.ok) {
+    if (!ok) {
       setMessage(null);
       setError(data.error);
     }
@@ -58,27 +43,19 @@ const ForgotForm = () => {
 
   const handleOTPSubmit = async () => {
     setLoading(true);
-
-    const response = await fetch("/api/verify/otp", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ OTP }),
-    });
-    const data = await response.json();
-    if (response.ok) {
+    const { ok, data } = await useFetch("/api/verify/otp", "PUT", { OTP });
+    if (ok) {
       setError(null);
       setMessage(data.message);
       setStep(3);
     }
-    if (!response.ok) {
+    if (!ok) {
       setMessage(null);
       setError(data.error);
     }
-
     setLoading(false);
   };
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -124,17 +101,11 @@ const ForgotForm = () => {
           <div>
             <label htmlFor="new-password">
               <h4>New Password :</h4>
-              <input
-                id="new-password"
-                onChange={handleNPasswordChange}
-              />
+              <input id="new-password" onChange={handleNPasswordChange} />
             </label>
             <label htmlFor="confirm-password">
               <h4>Re-enter New Password :</h4>
-              <input
-                id="confirm-password"
-                onChange={handleCPasswordChange}
-              />
+              <input id="confirm-password" onChange={handleCPasswordChange} />
             </label>
             <button type="submit" onClick={handleFormSubmit}>
               Reset Password
