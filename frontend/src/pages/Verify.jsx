@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+
 const Verify = () => {
   const { token } = useParams();
   const Navigate = useNavigate();
@@ -9,7 +11,7 @@ const Verify = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { ok, data } = useFetch(`/api/verify/new/${token}`, "PUT");
+      const { ok, data } = await useFetch(`/api/verify/new/${token}`, "PUT");
 
       if (ok) {
         setError(null);
