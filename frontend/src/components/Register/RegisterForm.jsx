@@ -13,7 +13,7 @@ const LoginForm = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const { ok, data } = useFetch("/api/auth/signup", "POST", { name, email, password });
+    const { ok, data } = await useFetch("/api/auth/signup", "POST", { name, email, password });
 
     if (ok) {
       setError(null);

@@ -11,7 +11,10 @@ const ChangeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { ok, data } = useFetch("/api/password/change", "PUT", { newPassword, oldPassword });
+    const { ok, data } = await useFetch("/api/password/change", "PUT", {
+      newPassword,
+      oldPassword,
+    });
 
     if (ok) {
       setError(null);
