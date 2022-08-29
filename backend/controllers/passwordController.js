@@ -4,7 +4,12 @@ const updateController = (_id, newPassword) => {
   return new Promise(async (resolve, reject) => {
     try {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-      await User.findByIdAndUpdate(_id, { password: hashedPassword }).exec();
+
+      await User.findByIdAndUpdate(_id, {
+        password: hashedPassword,
+        passwordChanged: Date.now(),
+      }).exec();
+
       resolve({ success: true, message: "Password changed successfully" });
     } catch (error) {
       console.log("Update Password Error\n\n", error);
@@ -28,7 +33,10 @@ const changeController = (_id, newPassword, oldPassword) => {
 
       if (isOldPasswordValid && !isSamePassword) {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await User.findByIdAndUpdate(_id, { password: hashedPassword }).exec();
+        await User.findByIdAndUpdate(_id, {
+          password: hashedPassword,
+          passwordChanged: Date.now(),
+        }).exec();
         resolve({ success: true, message: "Password changed successfully" });
       }
     } catch (error) {

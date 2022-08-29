@@ -35,7 +35,6 @@ router.post("/reset", async (req, res) => {
 router.put("/update", async (req, res) => {
   const { email, newPassword } = req.body;
   const isFound = await User.findOne({ email });
-  console.log(isFound);
   const updated = await updateController(isFound._id, newPassword);
   res.status(200).json({ message: updated.message });
 });
