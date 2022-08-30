@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const verifyRoutes = require("./routes/verifyRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
+const dataRoutes = require("./routes/dataRoutes");
 require("dotenv").config();
 
 //Connect to database
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/verify", verifyRoutes);
 app.use("/api/password", passwordRoutes);
+app.use("/api/data", dataRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port:${process.env.PORT}`);
