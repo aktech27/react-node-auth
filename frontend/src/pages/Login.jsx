@@ -1,8 +1,17 @@
-import LoginForm from "../components/Login/LoginForm";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/Providers/AuthContext";
+import LoginForm from "../components/Login/LoginForm";
 
 const Login = () => {
   const Navigator = useNavigate();
+  const { token } = useContext(AuthContext);
+  //Check if logged in
+  useEffect(() => {
+    if (token) {
+      Navigator("/"); // re-route to home
+    }
+  }, []);
 
   const handleClick = () => {
     Navigator("/forgot-password");

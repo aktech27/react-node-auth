@@ -1,38 +1,33 @@
 import "./LoginForm.module.css";
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import { AuthContext } from "../../context/Providers/AuthContext";
 
 const LoginForm = () => {
   const Navigator = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  //Check if logged in
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      Navigator("/"); // re-route to home
-    }
-  }, [loading]);
 
   const handleFormSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    console.log(`Login Form clicked\n\nEmail:${email}\n\nPassword:${password}`);
     //Api call
 
     const { ok, data } = await useFetch("/api/auth/signin", "POST", { email, password });
 
     if (ok) {
       setError(null);
-      console.log("Success");
-      localStorage.setItem("token", data.token);
+      setMessage(data.message);
+      dispatch({ type: "LOGIN", payload: { token: data.token } });
+      Navigator("/");
     }
     if (!ok) {
-      console.log("Error");
+      setMessage(null);
       setError(data.error);
     }
     setLoading(false);
@@ -58,6 +53,7 @@ const LoginForm = () => {
       <input type="submit" />
       {loading && <div>Loading.....</div>}
       {error && <div>{error}</div>}
+      {message && <div>{message}</div>}
     </form>
   );
 };
