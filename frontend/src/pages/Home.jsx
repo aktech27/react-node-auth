@@ -1,20 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { AuthContext } from "../context/Providers/AuthContext";
 
 const Home = () => {
   const Navigator = useNavigate();
+  const { token, dispatch } = useContext(AuthContext);
 
   //Check if already logged in or not
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) {
       Navigator("/login"); //re-route to login page
     }
-  }, []);
+  }, [token]);
 
   const handleClick = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
+    dispatch({ type: "LOGOUT" });
   };
 
   return (

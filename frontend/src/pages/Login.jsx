@@ -11,7 +11,7 @@ const Login = () => {
     if (token) {
       Navigator("/"); // re-route to home
     }
-  }, []);
+  }, [token]);
 
   const handleClick = () => {
     Navigator("/forgot-password");

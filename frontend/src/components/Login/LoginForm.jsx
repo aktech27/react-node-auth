@@ -1,11 +1,9 @@
 import "./LoginForm.module.css";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { AuthContext } from "../../context/Providers/AuthContext";
 
 const LoginForm = () => {
-  const Navigator = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +22,6 @@ const LoginForm = () => {
       setError(null);
       setMessage(data.message);
       dispatch({ type: "LOGIN", payload: { token: data.token } });
-      Navigator("/");
     }
     if (!ok) {
       setMessage(null);
