@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const handleError = require("./errorController");
 const updateController = (_id, newPassword) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -12,7 +13,7 @@ const updateController = (_id, newPassword) => {
 
       resolve({ success: true, message: "Password changed successfully" });
     } catch (error) {
-      console.log("Update Password Error\n\n", error);
+      handleError("Update Password Error", __filename, error);
       reject({ success: false, error: "Error occured. Please retry" });
     }
   });
@@ -40,7 +41,7 @@ const changeController = (_id, newPassword, oldPassword) => {
         resolve({ success: true, message: "Password changed successfully" });
       }
     } catch (error) {
-      console.log("Change Password Error\n\n", error);
+      handleError("Change Password Error", __filename, error);
       reject({ error: "Error occured. Please retry" });
     }
   });

@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const handleError = require("./errorController");
 
 const mailController = (options) => {
   return new Promise((resolve) => {
@@ -17,7 +18,7 @@ const mailController = (options) => {
     };
     Gmailer.sendMail(mail, (error) => {
       if (error) {
-        console.log(error);
+        handleError("Error in sending mail", __filename, error);
         resolve({ sent: false, msg: "Error in sending Email" });
       } else {
         resolve({ sent: true });

@@ -4,6 +4,7 @@ const authRoutes = require("./routes/authRoutes");
 const verifyRoutes = require("./routes/verifyRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
 const dataRoutes = require("./routes/dataRoutes");
+const errorHandler = require("./controllers/errorController");
 require("dotenv").config();
 
 //Connect to database
@@ -13,7 +14,7 @@ mongoose
     console.log("Connect to DB");
   })
   .catch((e) => {
-    console.log("Unable to connect to DB");
+    errorHandler("Database Connection Error", __filename, e);
   });
 
 const app = express();
